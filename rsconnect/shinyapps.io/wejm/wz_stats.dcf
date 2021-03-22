@@ -5,6 +5,6 @@ account: wejm
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3518741
-bundleId: 4150434
+bundleId: 4380720
 url: https://wejm.shinyapps.io/wz_stats/
-when: 1611768865.82163
+when: 1616429859.4189

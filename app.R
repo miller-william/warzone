@@ -1,7 +1,8 @@
 
-#setwd("~/node-test/WZ_Stats")
+#setwd("~/node-test/Warzone_GitHub")
 
-#rsconnect::deployApp('~/node-test/WZ_Stats')
+#run following code to deply application to https://wejm.shinyapp.io
+#rsconnect::deployApp('~/node-test/Warzone_GitHub')
 
 # Shiny web application for Warzone stats
 
@@ -461,20 +462,22 @@ server <- function(input, output, session) {
   #gulag win pc
   output$l_gauge3 <- renderPlotly({
     selected <- filter(last_week,player==input$playerid2)
-    if(selected$gulag_win_pc==max(last_week$gulag_win_pc)){title <- list(text = '★', font = list(outline = 'black', color = 'orange'))} else{title <- ""}
+    #filter to only include valid rows
+    valid <- filter(last_week,is.na(gulag_win_pc)==F)
+    if(selected$gulag_win_pc==max(valid$gulag_win_pc)){title <- list(text = '★', font = list(outline = 'black', color = 'orange'))} else{title <- ""}
     fig <- plot_ly(
       domain = list(x = c(0, 1), y = c(0, 1)),
       value = selected$gulag_win_pc,
       type = "indicator",
       mode = "gauge+number+delta",
-      delta = list(reference = mean(last_week$gulag_win_pc)),
+      delta = list(reference = mean(valid$gulag_win_pc)),
       title=title,
       gauge = list(
         axis =list(range = list(NULL, 100)),
         threshold = list(
           line = list(color = "red", width = 4),
           thickness = 0.75,
-          value = mean(last_week$gulag_win_pc)))) 
+          value = mean(valid$gulag_win_pc)))) 
     fig <- fig %>%
       layout(margin = list(l=20,r=30))
     
@@ -484,21 +487,23 @@ server <- function(input, output, session) {
   
   #gulag kd
   output$l_gauge4 <- renderPlotly({
-    selected <- filter(last_week,player==input$playerid2)
-    if(selected$gulag_kd==max(last_week$gulag_kd)){title <- list(text = '★', font = list(outline = 'black', color = 'orange'))} else{title <- ""}
+    selected <- filter(last_week,player==input$playerid2 & is.na(gulag_win_pc)==F)
+    #filter to only include valid rows
+    valid <- filter(last_week,is.na(gulag_win_pc)==F)
+    if(selected$gulag_kd==max(valid$gulag_kd)){title <- list(text = '★', font = list(outline = 'black', color = 'orange'))} else{title <- ""}
     fig <- plot_ly(
       domain = list(x = c(0, 1), y = c(0, 1)),
       value = selected$gulag_kd,
       type = "indicator",
       mode = "gauge+number+delta",
-      delta = list(reference = mean(last_week$gulag_kd)),
+      delta = list(reference = mean(valid$gulag_kd)),
       title=title,
       gauge = list(
         axis =list(range = list(NULL, 1.5)),
         threshold = list(
           line = list(color = "red", width = 4),
           thickness = 0.75,
-          value = mean(last_week$gulag_kd)))) 
+          value = mean(valid$gulag_kd)))) 
     fig <- fig %>%
       layout(margin = list(l=20,r=30))
     
